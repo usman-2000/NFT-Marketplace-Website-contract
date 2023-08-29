@@ -5,15 +5,15 @@ import "@openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin-contracts/contracts/utils/Counters.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.3/contracts/security/ReentrancyGuard.sol";
+import "./ReentrancyGuard.sol";
 
-contract MyToken is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receiver  {
+contract Marketplace is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receiver  {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenId;
     Counters.Counter private _itemsSold;
 
-    uint256 listingPrice = 0.0025 ether;
+    uint256 public listingPrice = 0.0025 ether;
 
     address payable owner;
 
@@ -49,14 +49,14 @@ contract MyToken is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receiver  {
         listingPrice = _listingPrice;
     }
 
-    function createToken(uint256 Price, string memory uri) public payable returns(uint256) {
+    function createNft(uint256 price, string memory uri) public payable returns(uint256) {
         _tokenId.increment();
 
         uint256 newTokenId = _tokenId.current();
         _safeMint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, uri);
 
-        createMarketItem(newTokenId, Price);
+        createMarketItem(newTokenId, price);
         return newTokenId;
 
     }
@@ -76,7 +76,7 @@ contract MyToken is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receiver  {
         ownerOfItem[tokenId] = msg.sender;
         (bool sent,) = idToMarketItem[tokenId].seller.call{value: msg.value}("");
         require(sent,"Cannot send the amount");
-        safeTransferFrom(address(this), msg.sender, tokenId);
+        ERC721(address(this)).transferFrom(address(this), msg.sender, tokenId);
         _itemsSold.increment();
     }
 
