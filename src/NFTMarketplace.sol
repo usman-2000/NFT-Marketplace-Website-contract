@@ -5,7 +5,7 @@ import "@openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin-contracts/contracts/utils/Counters.sol";
-import "@openzeppelin-contracts/blob/release-v4.3/contracts/security/ReentrancyGuard.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.3/contracts/security/ReentrancyGuard.sol";
 
 contract MyToken is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receiver  {
     using Counters for Counters.Counter;
