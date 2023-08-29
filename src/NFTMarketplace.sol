@@ -15,7 +15,7 @@ contract Marketplace is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receive
 
     uint256 public listingPrice = 0.0025 ether;
 
-    address payable owner;
+    address public owner;
 
     struct MarketItem{
         uint256 tokenId;
@@ -90,8 +90,8 @@ contract Marketplace is ERC721, ERC721URIStorage, ReentrancyGuard,IERC721Receive
     }
 
     function withdraw() public payable onlyOwner nonReentrant{
-        (bool sent,) = owner.call{value: msg.value}("");
-        require(sent,"Cannot send the amount");
+        (bool sent,) = payable(address(msg.sender)).call{value:address(this).balance}("");
+        require(sent, "Failed to send Ether");
     }
 
 
